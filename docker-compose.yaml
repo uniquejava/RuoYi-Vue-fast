@@ -1,0 +1,36 @@
+version: '3'
+services:
+  redis:
+    # 指定镜像
+    image: redis:6.2.6
+    ports:
+      # 端口映射
+      - 6379:6379
+    environment:
+      REDIS_PASSWORD:
+    volumes:
+      # 目录映射
+      - "./redis/conf:/usr/local/etc/redis"
+      - "./redis/data:/data"
+    command:
+      # 执行的命令
+      redis-server
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    # mysqld: [Warning] World-writable config file '/etc/mysql/conf.d/my.cnf' is ignored.
+    # see  https://stackoverflow.com/a/64388578
+    command: >
+      bash -c "
+      chmod 644 /etc/mysql/conf.d/*.cnf
+      && /entrypoint.sh mysqld
+      "
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql/conf/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+      - ./mysql/data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_DATABASE: "ry-vue"
+      MYSQL_ROOT_PASSWORD: "password"
