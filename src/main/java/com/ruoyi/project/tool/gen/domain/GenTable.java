@@ -148,6 +148,14 @@ public class GenTable extends BaseEntity {
      */
     private String parentMenuName;
 
+    public String getDbType() {
+        return dbType;
+    }
+
+    public void setDbType(String dbType) {
+        this.dbType = dbType;
+    }
+
     public Long getTableId() {
         return tableId;
     }
